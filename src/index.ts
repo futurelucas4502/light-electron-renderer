@@ -5,26 +5,28 @@ import path = require('path');
 import url = require('url');
 let currentRenderer: any;
 let currentViewData: any;
+let currentOptions: any;
 let currentViewsFolderPath: any;
 let currentAssetFolderPath: any;
 
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
   let fileName = parsedUrl.pathname;
-  if (process.platform === 'win32') fileName = fileName.substr(1);
+  if (process.platform === 'win32')
+    fileName = fileName.substr(1);
   return fileName.replace(/(?:\s|%20)/g, ' ');
 }
 
-export function load(browserWindow: Electron.BrowserWindow, view: string, viewData: any) { // this would seem to be working
+export function load(browserWindow: Electron.BrowserWindow, view: string, viewData: any, options: any) { // this would seem to be working
   currentViewData = viewData;
-  const query = {
-    view
-  }
+  currentOptions = options
   return browserWindow.loadURL(
     url.format({
       pathname: view,
       protocol: currentRenderer.name,
-      query,
+      query: {
+        view
+      },
       slashes: true,
     }),
   );
@@ -51,7 +53,7 @@ function renderTemplate(fileName: string) {
     try {
       const extension = currentRenderer.extension || `.${currentRenderer.name}`;
       const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
-      rendererAction(filePath, currentViewData, (renderedHTML: any) => {
+      rendererAction(filePath, currentViewData, currentOptions, (renderedHTML: any) => {
         resolve({
           mimeType: 'text/html',
           data: Buffer.from(renderedHTML),
@@ -63,19 +65,18 @@ function renderTemplate(fileName: string) {
   });
 }
 
-function rendererAction(filePath: string, viewData: string, callback: (data: string) => void) {
-  currentRenderer.currentRenderFunction(filePath, viewData, {}, (error: any, html: string) => {
-    // This line will probably error as i havent joined the renderer function name to the currentrenderer properly
-    if (error) {
-      throw new Error(error);
-    }
+function rendererAction(filePath: string, viewData: string, options: any, callback: (data: string) => void) {
+  currentViewData = undefined
+  currentOptions = undefined
+  currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html: string) => {
+    if (error)
+      throw new Error(error)
     callback(html);
   });
 }
 
 export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any) {
-  // main setup
-  currentRenderer = renderer; // gets name of renderer
+  currentRenderer = renderer;
   currentRenderer.currentRenderFunction = renderFunction;
   app.whenReady().then(() => {
     if (typeof assetFolderPath === undefined || assetFolderPath === undefined || assetFolderPath == null)

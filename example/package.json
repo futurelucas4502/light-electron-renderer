@@ -12,7 +12,7 @@
     "electron": "^10.1.1"
   },
   "dependencies": {
-    "@futurelucas4502/light-electron-renderer": "file:../NPM Packages by me/light-electron-renderer",
+    "@futurelucas4502/light-electron-renderer": "file:../",
     "ejs": "^3.1.5"
   }
 }
