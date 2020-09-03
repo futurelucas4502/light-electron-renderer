@@ -1,0 +1,50 @@
+{
+  "name": "@futurelucas4502/light-electron-renderer",
+  "version": "1.0.0",
+  "description": "A lightweight electron template renderer",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tslint -p tsconfig.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/futurelucas4502/light-electron-renderer.git"
+  },
+  "keywords": [
+    "electron",
+    "renderer",
+    "template",
+    "ejs",
+    "pug",
+    "jade",
+    "haml"
+  ],
+  "author": "futurelucas4502 (Lucas Wilson)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/futurelucas4502/light-electron-renderer/issues"
+  },
+  "homepage": "https://github.com/futurelucas4502/light-electron-renderer#readme",
+  "devDependencies": {
+    "ejs": "^3.1.5",
+    "electron": "^10.1.1",
+    "prettier": "^2.1.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "@types/node": "^14.6.2"
+  }
+}
