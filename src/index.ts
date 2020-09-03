@@ -12,7 +12,7 @@ let currentAssetFolderPath: any;
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
   let fileName = parsedUrl.pathname;
-
+  // turns \ into / so that path is usable on windows
   if (process.platform === 'win32') fileName = fileName.substr(1);
   return fileName.replace(/(?:\s|%20)/g, ' ');
 }
@@ -68,7 +68,6 @@ function rendererAction(filePath: string, viewData: string, callback: (data: str
   currentRenderer.currentRenderFunction(filePath, viewData, {}, (error: any, html: string) => {
     // This line will probably error as i havent joined the renderer function name to the currentrenderer properly
     if (error) {
-      if (error.file) error.message += `\n\nERROR @(${error.file}:${error.line}:${error.column})`;
       throw new Error(error);
     }
 
@@ -76,7 +75,7 @@ function rendererAction(filePath: string, viewData: string, callback: (data: str
   });
 }
 
-function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any) {
+export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any) {
   // main setup
   currentRenderer = renderer; // gets name of renderer
   currentRenderer.currentRenderFunction = renderFunction;
