@@ -38,7 +38,6 @@
   },
   "homepage": "https://github.com/futurelucas4502/light-electron-renderer#readme",
   "devDependencies": {
-    "ejs": "^3.1.5",
     "electron": "^10.1.1",
     "prettier": "^2.1.1",
     "tslint": "^6.1.3",
