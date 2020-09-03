@@ -3,7 +3,6 @@
 import { app, protocol } from 'electron';
 import path = require('path');
 import url = require('url');
-
 let currentRenderer: any;
 let currentViewData: any;
 let currentViewsFolderPath: any;
@@ -12,20 +11,20 @@ let currentAssetFolderPath: any;
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
   let fileName = parsedUrl.pathname;
-  // turns \ into / so that path is usable on windows
   if (process.platform === 'win32') fileName = fileName.substr(1);
   return fileName.replace(/(?:\s|%20)/g, ' ');
 }
 
-export function load(browserWindow: Electron.BrowserWindow, view: string, viewData: any) {
+export function load(browserWindow: Electron.BrowserWindow, view: string, viewData: any) { // this would seem to be working
   currentViewData = viewData;
+  const query = {
+    view
+  }
   return browserWindow.loadURL(
     url.format({
       pathname: view,
-      protocol: 'view:',
-      query: {
-        _view: view,
-      },
+      protocol: currentRenderer.name,
+      query,
       slashes: true,
     }),
   );
@@ -34,7 +33,6 @@ export function load(browserWindow: Electron.BrowserWindow, view: string, viewDa
 function setupView() {
   protocol.registerBufferProtocol(currentRenderer.name, (request, callback) => {
     const fileName = parseFilePath(request.url);
-
     renderTemplate(fileName).then((res: any) => callback(res));
   });
 }
@@ -44,23 +42,24 @@ function setupAssets() {
     const hostName: any = url.parse(request.url).hostname;
     const fileName = parseFilePath(request.url);
     const filePath = path.join(currentAssetFolderPath, hostName, fileName);
-
     callback({ path: filePath });
   });
 }
 
 function renderTemplate(fileName: string) {
   return new Promise((resolve, reject) => {
-    const renderer = currentRenderer;
-    const extension = renderer.extension || `.${renderer.name}`;
-    const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
-
-    rendererAction(filePath, currentViewData, (renderedHTML: any) => {
-      resolve({
-        mimeType: 'text/html',
-        data: Buffer.from(renderedHTML),
+    try {
+      const extension = currentRenderer.extension || `.${currentRenderer.name}`;
+      const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
+      rendererAction(filePath, currentViewData, (renderedHTML: any) => {
+        resolve({
+          mimeType: 'text/html',
+          data: Buffer.from(renderedHTML),
+        });
       });
-    });
+    } catch (error) {
+      reject(error)
+    }
   });
 }
 
@@ -70,7 +69,6 @@ function rendererAction(filePath: string, viewData: string, callback: (data: str
     if (error) {
       throw new Error(error);
     }
-
     callback(html);
   });
 }
