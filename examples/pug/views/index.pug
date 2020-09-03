@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  head
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' asset:">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' asset:">
+    title Hello World
+    include includes/head.pug
+  body
+    h1 Hello World!
+    a=appName+": "+appVersion
+    br
+    a="Node.js: "+nodeVersion
+    br
+    a="Chromium: "+chromeVersion
+    br
+    a="Electron: "+electronVersion
+    br
+    br
+    a(href='pug:///about') link

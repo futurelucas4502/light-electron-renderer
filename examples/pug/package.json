@@ -1,0 +1,19 @@
+{
+  "name": "pug-example",
+  "productName": "Pug example",
+  "version": "1.0.0",
+  "description": "Example of how to use light-electron-renderer with pug!",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "futurelucas4502 (Lucas Wilson)",
+  "license": "MIT",
+  "dependencies": {
+    "@futurelucas4502/light-electron-renderer": "file:../..",
+    "pug": "^3.0.0"
+  },
+  "devDependencies": {
+    "electron": "^10.1.1"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "ejs-example",
+  "productName": "EJS example",
+  "version": "1.0.0",
+  "description": "Example of how to use light-electron-renderer with ejs!",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "futurelucas4502 (Lucas Wilson)",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^10.1.1"
+  },
+  "dependencies": {
+    "@futurelucas4502/light-electron-renderer": "file:../../",
+    "ejs": "^3.1.5"
+  }
+}

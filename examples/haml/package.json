@@ -1,0 +1,19 @@
+{
+  "name": "haml-example",
+  "productName": "Haml example",
+  "version": "1.0.0",
+  "description": "Example of how to use light-electron-renderer with haml!",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "futurelucas4502 (Lucas Wilson)",
+  "license": "MIT",
+  "dependencies": {
+    "@futurelucas4502/light-electron-renderer": "file:../..",
+    "hamljs": "^0.6.2"
+  },
+  "devDependencies": {
+    "electron": "^10.1.1"
+  }
+}

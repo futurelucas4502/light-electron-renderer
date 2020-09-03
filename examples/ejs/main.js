@@ -1,21 +1,25 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
+const path = require('path')
 const ejs = require('ejs')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-// renderer.use(your-renderer, using-assets?, foldername/path-to-assets, foldername/path-to-views, templating-engine-function-that-returns-html)
 renderer.use(ejs, true, 'assets', 'views', ejs.renderFile)
 
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 600
   })
 
   renderer.load(mainWindow, 'index', {
-    msg: "Hello"
+    appName: app.getName(),
+    appVersion: app.getVersion(),
+    chromeVersion: process.versions['chrome'],
+    nodeVersion: process.versions['node'],
+    electronVersion: process.versions['electron']
   })
 
   // Open the DevTools.
