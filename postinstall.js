@@ -1,0 +1,1 @@
+console.log("Thanks for using light-electron-renderer by futurelucas4502!\n")

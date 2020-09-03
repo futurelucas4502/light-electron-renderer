@@ -5,9 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
     "lint": "tslint -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\"",
+    "build": "tsc",
+    "postinstall": "node postinstall.js",
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
