@@ -2,11 +2,11 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const fs = require('fs')
-const Sqrl = require('squirrelly')
+const eta = require('eta')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
+renderer.use(eta, true, 'assets', 'views', eta.render, 'eta')
 
 function createWindow () {
   // Create the browser window.
@@ -15,8 +15,8 @@ function createWindow () {
     height: 600
   })
 
-  const head = (fs.readFileSync(path.join(__dirname, "views/partials/head.squirrelly"))).toString()// yes this is not pretty but it works
-  Sqrl.templates.define("head", Sqrl.compile(head));
+  const head = (fs.readFileSync(path.join(__dirname, "views/partials/head.eta"))).toString()// yes this is not pretty but it works
+  eta.templates.define("head", eta.compile(head));
 
   renderer.load(mainWindow, 'index', {
     appName: app.getName(),
