@@ -5,7 +5,7 @@ const Sqrl = require('squirrelly')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.renderFile, "squirrelly")
+renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
 
 function createWindow () {
   // Create the browser window.
