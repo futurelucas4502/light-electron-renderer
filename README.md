@@ -3,7 +3,7 @@ A lightweight template view renderer for electron
 
 Work in progress!
 
-The goal of this project is to create a fully functional view renderer similair to that of express that can support: ejs, pug, haml, squirelly and many other templating libraries
+The goal of this project is to create a fully functional view renderer similair to that of express that can support: ejs, pug, haml, squirrelly and many other templating libraries
 
 The idea here is that you use this and parse the `require('some-templating-language')` into this as well as the name of the render function e.g. if it was ejs it would be `renderFile` hopefully that makes sense if not take a look at the examples in the examples folder
 
@@ -27,4 +27,4 @@ Note: You **MUST** npm install whatever templating language your using
 * Windows 10 x64 & ejs
 * Windows 10 x64 & haml
 * Windows 10 x64 & pug
-* Windows 10 x64 & squirelly
+* Windows 10 x64 & squirrelly
