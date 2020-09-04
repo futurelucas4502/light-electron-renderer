@@ -76,7 +76,6 @@ function renderTemplate(fileName: string) {
       const extension = `.${currentRendererName}`;
       const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
       rendererAction(filePath, currentViewData, currentOptions, (renderedHTML: any) => {
-        console.log(renderedHTML)
         resolve({
           mimeType: 'text/html',
           data: Buffer.from(renderedHTML),
@@ -105,7 +104,15 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
       callback(html1);
       return
     });
-    callback(html)
+    try {
+      html.then((result: any) => {
+        return result
+      }).then((htmlRes: any) => {
+        callback(htmlRes);
+      })
+    } catch (error) {
+      callback(html)
+    }
   }
 }
 
