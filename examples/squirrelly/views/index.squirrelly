@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  
+  {{@include('head')/}}
   <title>Hello World!</title>
 </head>
 
@@ -12,7 +12,7 @@
     Node.js: {{it.nodeVersion}}<br>
     Chromium: {{it.chromeVersion}}<br>
     Electron: {{it.electronVersion}}</p>
-  <a href="ejs:///about">link</a>
+  <a href="squirrelly:///about">link</a>
 </body>
 
 </html>

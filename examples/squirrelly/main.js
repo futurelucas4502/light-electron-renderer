@@ -1,18 +1,22 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
+const fs = require('fs')
 const Sqrl = require('squirrelly')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
 renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
-
+https://github.com/squirrellyjs/squirrelly/blob/master/dist/squirrelly.cjs.js#L959
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600
   })
+
+  const head = (fs.readFileSync(path.join(__dirname, "views/partials/head.squirrelly"))).toString()// yes this is not pretty but it works
+  Sqrl.templates.define("head", Sqrl.compile(head));
 
   renderer.load(mainWindow, 'index', {
     appName: app.getName(),
