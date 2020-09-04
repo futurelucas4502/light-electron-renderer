@@ -52,6 +52,8 @@ function setupView() {
         callback(res)
         currentViewData = undefined
         currentOptions = undefined
+      }).catch((err) => {
+        throw new Error(err)
       })
     })
     previousViewData = currentViewData
@@ -88,16 +90,8 @@ function renderTemplate(fileName: string) {
 function rendererAction(filePath: string, viewData: string, options: any, callback: (data: string) => void) {
   if (retry === false) {
     const html = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: string) => {
-      if (error) {
-        const html2 = currentRenderer.currentRenderFunction(filePath, viewData, options, (error1: any, html3: string) => {
-          if (error1)
-            throw new Error(error1)
-          callback(html3);
-          return
-        });
-        callback(html2)
-        return
-      }
+      if (error)
+        throw new Error(error)
       callback(html1);
       return
     });
@@ -105,13 +99,20 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
   } else {
     retry = false
     const html = currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html1: string) => {
-      if (error) {
+      if (error)
         throw new Error(error)
-      }
       callback(html1);
       return
     });
-    callback(html)
+    try {
+      html.then((result: any) => {
+        return result
+      }).then((htmlRes: any) => {
+        callback(htmlRes);
+      })
+    } catch (error) {
+      callback(html)
+    }
   }
 }
 
@@ -126,7 +127,7 @@ export function use(renderer: any, useAssets: boolean, assetFolderPath: string, 
       throw new Error('This renderer doesn\'t have a default name assigned please pass it as the 6th parameter in the `.use` function.');
     }
   }
-  if('function' === typeof renderFunction){
+  if ('function' === typeof renderFunction) {
     currentRenderer.currentRenderFunction = renderFunction;
   } else {
     throw new Error('The 5th parameter in the `.use` function is not correct please correct it.');

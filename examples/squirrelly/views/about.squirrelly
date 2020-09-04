@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{@include('head')/}}
+    <title>About World!</title>
+  </head>
+  <body>
+    <h1>About World!</h1>
+  </body>
+</html>
