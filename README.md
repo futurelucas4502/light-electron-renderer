@@ -20,7 +20,7 @@ You wil be able to install it using:
 
 Note: You **MUST** npm install whatever templating language your using
 
-![Examples image](https://github.com/futurelucas4502/light-electron-renderer/examples/screenshot.png)
+![Examples image](https://github.com/futurelucas4502/light-electron-renderer/assets/screenshot.png)
 
 # Confirmed working with:
 
