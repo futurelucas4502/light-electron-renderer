@@ -22,7 +22,7 @@ function parseFilePath(urlString: any) {
   return fileName.replace(/(?:\s|%20)/g, ' ');
 }
 
-export function load(browserWindow: Electron.BrowserWindow, view: string, viewData: any, options: any) { // this would seem to be working
+export function load(browserWindow: Electron.BrowserWindow, view: string, viewData: any, options: any) {
   currentViewData = viewData;
   currentOptions = options;
 
@@ -86,23 +86,31 @@ function renderTemplate(fileName: string) {
 }
 
 function rendererAction(filePath: string, viewData: string, options: any, callback: (data: string) => void) {
-  if (retry == false) {
-    let html = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html: string) => { // pug will not do the function below and will instead sent the html to variable html which we use in the callback
-      if (error)
-        throw new Error(error)
-      callback(html);
+  if (retry === false) {
+    const html = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: string) => {
+      if (error) {
+        const html2 = currentRenderer.currentRenderFunction(filePath, viewData, options, (error1: any, html3: string) => {
+          if (error1)
+            throw new Error(error1)
+          callback(html3);
+          return
+        });
+        callback(html2)
+        return
+      }
+      callback(html1);
       return
     });
     callback(html)
   } else {
     retry = false
-    let html = currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html: string) => { // pug will not do the function below and will instead sent the html to variable html which we use in the callback
-      if (error)
+    const html = currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html1: string) => {
+      if (error) {
         throw new Error(error)
-      callback(html);
+      }
+      callback(html1);
       return
     });
-    console.log(html); // haml should be using the first function with fs.readFileSync it attempts so then something must go wrong fix tomorrow
     callback(html)
   }
 }
@@ -115,10 +123,14 @@ export function use(renderer: any, useAssets: boolean, assetFolderPath: string, 
     if (name) {
       currentRendererName = name.toLowerCase();
     } else {
-      throw new Error('This renderer doesn\'t have a default name assigned please pass it as the 6th parameter.');
+      throw new Error('This renderer doesn\'t have a default name assigned please pass it as the 6th parameter in the `.use` function.');
     }
   }
-  currentRenderer.currentRenderFunction = renderFunction;
+  if('function' === typeof renderFunction){
+    currentRenderer.currentRenderFunction = renderFunction;
+  } else {
+    throw new Error('The 5th parameter in the `.use` function is not correct please correct it.');
+  }
   app.whenReady().then(() => {
     if (typeof assetFolderPath === undefined || assetFolderPath === undefined || assetFolderPath == null)
       throw new Error('Views folder path must be provided!');

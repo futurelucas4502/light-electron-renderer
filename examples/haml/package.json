@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@futurelucas4502/light-electron-renderer": "file:../..",
-    "hamljs": "^0.6.2"
+    "haml": "^0.4.3"
   },
   "devDependencies": {
     "electron": "^10.1.1"

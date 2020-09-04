@@ -1,6 +1,9 @@
 !!!
 %html
   %head
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' asset:">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' asset:">
+    %link{rel :"stylesheet", type :"text/css", href :"asset://css/main.css"}
     %title Hello World
   %body
     %h1 Hello World!

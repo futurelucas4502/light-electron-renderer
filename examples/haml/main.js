@@ -1,11 +1,12 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
-const haml = require('hamljs')
+const fs = require('fs')
+const haml = require('haml')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(haml, true, 'assets', 'views', haml.render, "haml")
+renderer.use(haml, true, 'assets', 'views', haml.render)
 
 function createWindow() {
   // Create the browser window.
