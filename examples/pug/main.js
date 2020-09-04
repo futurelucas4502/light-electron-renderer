@@ -5,7 +5,6 @@ const pug = require('pug')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-// renderer.use(your-renderer, using-assets?, foldername/path-to-assets, foldername/path-to-views, templating-engine-function-that-returns-html)
 renderer.use(pug, true, 'assets', 'views', pug.renderFile)
 
 function createWindow() {
