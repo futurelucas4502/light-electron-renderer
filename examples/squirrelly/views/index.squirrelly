@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+  <title>Hello World!</title>
+</head>
+
+<body>
+  <h1>Hello World!</h1>
+  <p>{{it.appName}}: {{it.appVersion}}<br>
+    Node.js: {{it.nodeVersion}}<br>
+    Chromium: {{it.chromeVersion}}<br>
+    Electron: {{it.electronVersion}}</p>
+  <a href="ejs:///about">link</a>
+</body>
+
+</html>

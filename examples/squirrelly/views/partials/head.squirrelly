@@ -1,0 +1,4 @@
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' asset:">
+<meta http-equiv="X-Content-Security-Policy" content="default-src 'self' asset:">
+<link href="asset://css/main.css" rel="stylesheet" />
