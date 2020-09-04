@@ -28,3 +28,4 @@ Note: You **MUST** npm install whatever templating language your using
 * Windows 10 x64 & haml
 * Windows 10 x64 & pug
 * Windows 10 x64 & squirrelly
+* Windows 10 x64 & eta
