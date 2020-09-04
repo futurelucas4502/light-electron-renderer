@@ -16,7 +16,8 @@
     "postversion": "git push && git push --tags"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "postinstall.js"
   ],
   "repository": {
     "type": "git",
