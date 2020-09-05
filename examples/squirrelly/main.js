@@ -6,7 +6,9 @@ const Sqrl = require('squirrelly')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
+renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly", {
+  views: [path.join(__dirname, 'views')], // Tell Squirrelly where to look for the templates meaning partials can be loaded correctly
+})
 
 function createWindow () {
   // Create the browser window.
@@ -14,9 +16,6 @@ function createWindow () {
     width: 800,
     height: 600
   })
-
-  const head = (fs.readFileSync(path.join(__dirname, "views/partials/head.squirrelly"))).toString()// yes this is not pretty but it works
-  Sqrl.templates.define("head", Sqrl.compile(head));
 
   renderer.load(mainWindow, 'index', {
     appName: app.getName(),

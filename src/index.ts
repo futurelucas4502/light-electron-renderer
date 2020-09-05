@@ -13,6 +13,7 @@ let previousOptions: any;
 let currentViewsFolderPath: any;
 let currentAssetFolderPath: any;
 let retry: boolean = false;
+let permanentOpts: any;
 
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
@@ -75,13 +76,20 @@ function renderTemplate(fileName: string) {
     try {
       const extension = `.${currentRendererName}`;
       const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
-      rendererAction(filePath, currentViewData, currentOptions, (renderedHTML: any) => {
+      const options = currentOptions || new Object()
+      if (permanentOpts != undefined) {
+        for (var item in permanentOpts) {
+          options[item] = permanentOpts[item]
+        }
+      }
+      rendererAction(filePath, currentViewData, options, (renderedHTML: any) => {
         resolve({
           mimeType: 'text/html',
           data: Buffer.from(renderedHTML),
         });
       });
     } catch (error) {
+      // console.log(error)
       reject(error)
     }
   });
@@ -116,7 +124,8 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
   }
 }
 
-export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any, name: string) {
+export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any, name: string, permOptions: any) {
+  permanentOpts = permOptions
   currentRenderer = renderer;
   try {
     currentRendererName = currentRenderer.name.toLowerCase();

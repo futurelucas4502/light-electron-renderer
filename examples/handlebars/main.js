@@ -2,13 +2,11 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const fs = require('fs')
-const eta = require('eta')
+const handlebars = require('handlebars')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(eta, true, 'assets', 'views', eta.render, 'eta', {
-  views: [path.join(__dirname, 'views')], // Tell eta where to look for the templates meaning partials can be loaded correctly
-})
+renderer.use(handlebars, true, 'assets', 'views', handlebars.compile, "handlebars") // handlebars is special therefore you compile first and then add the data to a seperate function see here: https://www.npmjs.com/package/handlebars#usage
 
 function createWindow () {
   // Create the browser window.

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <%~ E.include("head") %>
+  <%~ E.includeFile('partials/head.eta') %>
   <title>Hello World!</title>
 </head>
 

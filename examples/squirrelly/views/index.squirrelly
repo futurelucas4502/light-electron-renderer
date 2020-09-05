@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  {{@include('head')/}}
+  {{@includeFile('partials/head.squirrelly') /}}
   <title>Hello World!</title>
 </head>
 
