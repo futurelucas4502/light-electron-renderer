@@ -2,11 +2,20 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const fs = require('fs')
-const handlebars = require('handlebars')
+const handlebars = require('handlebars');
+const engine = require('engine-handlebars')(handlebars);
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(handlebars, true, 'assets', 'views', handlebars.compile, "handlebars") // handlebars is special therefore you compile first and then add the data to a seperate function see here: https://www.npmjs.com/package/handlebars#usage
+renderer.use(engine, true, 'assets', 'views', engine.renderSync)
+const head = () =>{
+  const rawData = fs.readFileSync(__dirname + '\\views\\partials\\head.handlebars')
+  return handlebars.compile(rawData.toString())
+}
+
+renderer.permOpts({
+  partials: {head: head()}
+})
 
 function createWindow () {
   // Create the browser window.
@@ -14,7 +23,6 @@ function createWindow () {
     width: 800,
     height: 600
   })
-
   renderer.load(mainWindow, 'index', {
     appName: app.getName(),
     appVersion: app.getVersion(),

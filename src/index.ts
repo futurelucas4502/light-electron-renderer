@@ -14,6 +14,7 @@ let currentViewsFolderPath: any;
 let currentAssetFolderPath: any;
 let retry: boolean = false;
 let permanentOpts: any;
+let permanentVD: any;
 
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
@@ -77,16 +78,29 @@ function renderTemplate(fileName: string) {
       const extension = `.${currentRendererName}`;
       const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
       const options = currentOptions || new Object()
+      const viewData = currentViewData || new Object()
       if (permanentOpts != undefined) {
         for (var item in permanentOpts) {
           options[item] = permanentOpts[item]
         }
       }
-      rendererAction(filePath, currentViewData, options, (renderedHTML: any) => {
-        resolve({
-          mimeType: 'text/html',
-          data: Buffer.from(renderedHTML),
-        });
+      if (permanentVD != undefined) {
+        for (var item in permanentVD) {
+          viewData[item] = permanentVD[item]
+        }
+      }
+      rendererAction(filePath, viewData, options, (renderedHTML: any) => {
+        try {
+          resolve({
+            mimeType: 'text/html',
+            data: Buffer.from(renderedHTML),
+          });
+        } catch (error) {
+          resolve({
+            mimeType: 'text/html',
+            data: Buffer.from(renderedHTML.contents.toString()),
+          });
+        }
       });
     } catch (error) {
       // console.log(error)
@@ -97,19 +111,43 @@ function renderTemplate(fileName: string) {
 
 function rendererAction(filePath: string, viewData: string, options: any, callback: (data: string) => void) {
   if (retry === false) {
-    const html = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: string) => {
+    const html = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: any) => {
       if (error)
         throw new Error(error)
-      callback(html1);
+      try {
+        html1.then((result: any) => {
+          return result;
+        }).then((htmlRes: any) => {
+          callback(htmlRes);
+        });
+      } catch (error) {
+        callback(html1);
+      }
       return
     });
-    callback(html)
+    try {
+      html.then((result: any) => {
+        return result;
+      }).then((htmlRes: any) => {
+        callback(htmlRes);
+      });
+    } catch (error) {
+      callback(html);
+    }
   } else {
     retry = false
-    const html = currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html1: string) => {
+    const html = currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html1: any) => {
       if (error)
         throw new Error(error)
-      callback(html1);
+      try {
+        html1.then((result: any) => {
+          return result;
+        }).then((htmlRes: any) => {
+          callback(htmlRes);
+        });
+      } catch (error) {
+        callback(html1);
+      }
       return
     });
     try {
@@ -124,8 +162,7 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
   }
 }
 
-export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any, name: string, permOptions: any) {
-  permanentOpts = permOptions
+export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any, name: string) {
   currentRenderer = renderer;
   try {
     currentRendererName = currentRenderer.name.toLowerCase();
@@ -153,4 +190,13 @@ export function use(renderer: any, useAssets: boolean, assetFolderPath: string, 
       setupAssets();
     }
   });
+}
+
+
+export function permOpts(permanentOptions: any){
+  permanentOpts = permanentOptions
+}
+
+export function permViewData(permanentViewData: any){
+  permanentVD = permanentViewData
 }

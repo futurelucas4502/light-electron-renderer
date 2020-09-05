@@ -6,7 +6,9 @@ const Sqrl = require('squirrelly')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly", {
+renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
+
+renderer.permOpts({
   views: [path.join(__dirname, 'views')], // Tell Squirrelly where to look for the templates meaning partials can be loaded correctly
 })
 
