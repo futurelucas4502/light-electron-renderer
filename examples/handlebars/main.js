@@ -2,14 +2,19 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const fs = require('fs')
-const Sqrl = require('squirrelly')
+const handlebars = require('handlebars');
+const engine = require('engine-handlebars')(handlebars);
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
+renderer.use(engine, true, 'assets', 'views', engine.renderSync)
+const head = () =>{
+  const rawData = fs.readFileSync(__dirname + '\\views\\partials\\head.handlebars')
+  return handlebars.compile(rawData.toString())
+}
 
 renderer.permOpts({
-  views: [path.join(__dirname, 'views')], // Tell Squirrelly where to look for the templates meaning partials can be loaded correctly
+  partials: {head: head()}
 })
 
 function createWindow () {
@@ -18,7 +23,6 @@ function createWindow () {
     width: 800,
     height: 600
   })
-
   renderer.load(mainWindow, 'index', {
     appName: app.getName(),
     appVersion: app.getVersion(),

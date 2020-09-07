@@ -12,7 +12,10 @@ let previousViewData: any;
 let previousOptions: any;
 let currentViewsFolderPath: any;
 let currentAssetFolderPath: any;
-let retry: boolean = false;
+let retry: number = 0;
+let permanentOpts: any;
+let permanentVD: any;
+let debugMode: boolean = false;
 
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
@@ -47,13 +50,41 @@ function setupView() {
       currentViewData = undefined
       currentOptions = undefined
     }).catch(() => {
-      retry = true
+      retry = 1
       renderTemplate(fileName).then((res: any) => {
         callback(res)
         currentViewData = undefined
         currentOptions = undefined
       }).catch((err) => {
-        throw new Error(err)
+        retry = 2
+        renderTemplate(fileName).then((res: any) => {
+          callback(res)
+          currentViewData = undefined
+          currentOptions = undefined
+        }).catch((err) => {
+          retry = 3
+          renderTemplate(fileName).then((res: any) => {
+            callback(res)
+            currentViewData = undefined
+            currentOptions = undefined
+          }).catch((err) => {
+            retry = 4
+            renderTemplate(fileName).then((res: any) => {
+              callback(res)
+              currentViewData = undefined
+              currentOptions = undefined
+            }).catch((err) => {
+              retry = 5
+              renderTemplate(fileName).then((res: any) => {
+                callback(res)
+                currentViewData = undefined
+                currentOptions = undefined
+              }).catch((err) => {
+                throw new Error(err)
+              })
+            })
+          })
+        })
       })
     })
     previousViewData = currentViewData
@@ -75,49 +106,120 @@ function renderTemplate(fileName: string) {
     try {
       const extension = `.${currentRendererName}`;
       const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
-      rendererAction(filePath, currentViewData, currentOptions, (renderedHTML: any) => {
-        resolve({
-          mimeType: 'text/html',
-          data: Buffer.from(renderedHTML),
-        });
+      const options = currentOptions || new Object()
+      const viewData = currentViewData || new Object()
+      if (permanentOpts != undefined) {
+        for (var item in permanentOpts) {
+          options[item] = permanentOpts[item]
+        }
+      }
+      if (permanentVD != undefined) {
+        for (var item in permanentVD) {
+          viewData[item] = permanentVD[item]
+        }
+      }
+      rendererAction(filePath, viewData, options, (renderedHTML: any) => {
+        try {
+          resolve({
+            mimeType: 'text/html',
+            data: Buffer.from(renderedHTML),
+          });
+        } catch (error) {
+          resolve({
+            mimeType: 'text/html',
+            data: Buffer.from(renderedHTML.contents.toString()),
+          });
+        }
       });
     } catch (error) {
+      if (debugMode) {
+        console.log(error)
+      }
       reject(error)
     }
   });
 }
 
-function rendererAction(filePath: string, viewData: string, options: any, callback: (data: string) => void) {
-  if (retry === false) {
-    const html = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: string) => {
-      if (error)
-        throw new Error(error)
-      callback(html1);
-      return
-    });
-    callback(html)
-  } else {
-    retry = false
-    const html = currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html1: string) => {
-      if (error)
-        throw new Error(error)
-      callback(html1);
-      return
-    });
-    try {
-      html.then((result: any) => {
-        return result
-      }).then((htmlRes: any) => {
-        callback(htmlRes);
+function rendererAction(filePath: string, viewData: string, options: any, callback: (data: any) => void) {
+  if(debugMode){
+    console.log(retry)
+  }
+  switch (retry) {
+    case 0:
+      currentRenderer.currentRenderFunction(filePath, viewData, (error: any, html: any) => { // twig doesnt have any kind of catch it simply throws an error so we have to do twig first just in case
+        if (error)
+          throw new Error(error)
+        callback(html);
+        return;
       })
-    } catch (error) {
-      callback(html)
-    }
+      callback(undefined) // somehow this is running before the function above if anyone wants to use twig please feel free to try and fix this as ive used promises, async await try catch everything i can think of and can't get it to work
+      break
+    case 1:
+      currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: any) => {
+        if (error)
+          throw new Error(error)
+        try { // TODO: Optimise this into its own case to prevent doing it every load
+          html1.then((result: any) => {
+            return result;
+          }).then((htmlRes: any) => {
+            callback(htmlRes);
+          });
+        } catch (error) {
+          callback(html1);
+        }
+        return
+      });
+      callback(undefined)
+      break
+    case 2:
+      let html2 = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options)
+      try { // TODO: Optimise this into its own case to prevent doing it every load
+        html2.then((result: any) => {
+          return result;
+        }).then((htmlRes: any) => {
+          callback(htmlRes);
+        });
+      } catch (error) {
+        callback(html2);
+      }
+      callback(undefined)
+      break;
+    case 3:
+      currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html3: any) => {
+        if (error)
+          throw new Error(error)
+        try { // TODO: Optimise this into its own case to prevent doing it every load
+          html3.then((result: any) => {
+            return result;
+          }).then((htmlRes: any) => {
+            callback(htmlRes);
+          });
+        } catch (error) {
+          callback(html3);
+        }
+        return
+      });
+      callback(undefined)
+      break
+    case 4:
+      let html4 = currentRenderer.currentRenderFunction(filePath, viewData, options)
+      try { // TODO: Optimise this into its own case to prevent doing it every load
+        html4.then((result: any) => {
+          return result
+        }).then((htmlRes: any) => {
+          callback(htmlRes);
+        })
+      } catch (error) {
+        callback(html4)
+      }
+      callback(undefined)
+      break
   }
 }
 
-export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any, name: string) {
+export function use(renderer: any, useAssets: boolean, assetFolderPath: string, viewsFolderPath: string, renderFunction: any, name: string, debug: boolean) {
   currentRenderer = renderer;
+  debugMode = debug
   try {
     currentRendererName = currentRenderer.name.toLowerCase();
   } catch{
@@ -144,4 +246,13 @@ export function use(renderer: any, useAssets: boolean, assetFolderPath: string, 
       setupAssets();
     }
   });
+}
+
+
+export function permOpts(permanentOptions: any) {
+  permanentOpts = permanentOptions
+}
+
+export function permViewData(permanentViewData: any) {
+  permanentVD = permanentViewData
 }

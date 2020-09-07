@@ -2,21 +2,21 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const fs = require('fs')
-const Sqrl = require('squirrelly')
+const eta = require('eta')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
-
-renderer.permOpts({
-  views: [path.join(__dirname, 'views')], // Tell Squirrelly where to look for the templates meaning partials can be loaded correctly
-})
+renderer.use(eta, true, 'assets', 'views', eta.render, 'eta')
 
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600
+  })
+
+  renderer.permOpts({
+    views: [path.join(__dirname, 'views')], // Tell eta where to look for the templates meaning partials can be loaded correctly
   })
 
   renderer.load(mainWindow, 'index', {

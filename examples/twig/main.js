@@ -1,16 +1,14 @@
+!!!BROKEN!!!
+
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const fs = require('fs')
-const Sqrl = require('squirrelly')
+const twig = require('twig')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(Sqrl, true, 'assets', 'views', Sqrl.render, "squirrelly")
-
-renderer.permOpts({
-  views: [path.join(__dirname, 'views')], // Tell Squirrelly where to look for the templates meaning partials can be loaded correctly
-})
+renderer.use(twig, true, 'assets', 'views', twig.renderFile, "twig", true)
 
 function createWindow () {
   // Create the browser window.
