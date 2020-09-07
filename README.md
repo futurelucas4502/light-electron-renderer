@@ -1,8 +1,6 @@
 # light-electron-renderer
 A lightweight template view renderer for electron
 
-Work in progress!
-
 The goal of this project is to create a fully functional view renderer similair to that of express that can support: ejs, pug, haml, squirrelly and many other templating libraries
 
 The idea here is that you use this and parse the `require('some-templating-language')` into this as well as the name of the render function e.g. if it was ejs it would be `renderFile` hopefully that makes sense if not take a look at the examples in the examples folder
@@ -33,3 +31,6 @@ Note: You **MUST** npm install whatever templating language your using
 
 # Libraries that can work with this but still have problems:
 * Twig (see [here](https://github.com/futurelucas4502/light-electron-renderer/issues/3) for more info)
+
+# Libraries that will have support added in the future:
+https://github.com/futurelucas4502/light-electron-renderer/projects/2
