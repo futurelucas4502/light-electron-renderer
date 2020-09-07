@@ -30,3 +30,6 @@ Note: You **MUST** npm install whatever templating language your using
 * Windows 10 x64 & squirrelly
 * Windows 10 x64 & eta
 * Windows 10 x64 & handlebars
+
+# Libraries that can work with this but still have problems:
+* Twig (see [here](https://github.com/futurelucas4502/light-electron-renderer/issues/3) for more info)
