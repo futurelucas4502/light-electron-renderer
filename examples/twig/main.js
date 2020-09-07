@@ -1,3 +1,5 @@
+!!!BROKEN!!!
+
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
@@ -6,7 +8,7 @@ const twig = require('twig')
 const renderer = require('@futurelucas4502/light-electron-renderer')
 
 // setup renderer
-renderer.use(twig, true, 'assets', 'views', twig.renderFile, "twig")
+renderer.use(twig, true, 'assets', 'views', twig.renderFile, "twig", true)
 
 function createWindow () {
   // Create the browser window.

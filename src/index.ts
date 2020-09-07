@@ -140,30 +140,36 @@ function renderTemplate(fileName: string) {
   });
 }
 
-function rendererAction(filePath: string, viewData: string, options: any, callback: (data: string) => void) {
+function rendererAction(filePath: string, viewData: string, options: any, callback: (data: any) => void) {
+  if(debugMode){
+    console.log(retry)
+  }
   switch (retry) {
     case 0:
       currentRenderer.currentRenderFunction(filePath, viewData, (error: any, html: any) => { // twig doesnt have any kind of catch it simply throws an error so we have to do twig first just in case
         if (error)
           throw new Error(error)
-        callback(html)
+        callback(html);
+        return;
       })
+      callback(undefined) // somehow this is running before the function above if anyone wants to use twig please feel free to try and fix this as ive used promises, async await try catch everything i can think of and can't get it to work
       break
     case 1:
-      currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html: any) => {
+      currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options, (error: any, html1: any) => {
         if (error)
           throw new Error(error)
         try { // TODO: Optimise this into its own case to prevent doing it every load
-          html.then((result: any) => {
+          html1.then((result: any) => {
             return result;
           }).then((htmlRes: any) => {
             callback(htmlRes);
           });
         } catch (error) {
-          callback(html);
+          callback(html1);
         }
         return
       });
+      callback(undefined)
       break
     case 2:
       let html2 = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options)
@@ -176,6 +182,7 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
       } catch (error) {
         callback(html2);
       }
+      callback(undefined)
       break;
     case 3:
       currentRenderer.currentRenderFunction(filePath, viewData, options, (error: any, html3: any) => {
@@ -192,6 +199,7 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
         }
         return
       });
+      callback(undefined)
       break
     case 4:
       let html4 = currentRenderer.currentRenderFunction(filePath, viewData, options)
@@ -204,6 +212,7 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
       } catch (error) {
         callback(html4)
       }
+      callback(undefined)
       break
   }
 }
