@@ -20,7 +20,7 @@ You wil be able to install it using:
 
 Note: You **MUST** npm install whatever templating language your using
 
-![Examples image](https://github.com/futurelucas4502/light-electron-renderer/assets/screenshot.png)
+![Examples image](https://raw.githubusercontent.com/futurelucas4502/light-electron-renderer/master/assets/screenshot.png)
 
 # Confirmed working with:
 
@@ -30,3 +30,6 @@ Note: You **MUST** npm install whatever templating language your using
 * Windows 10 x64 & squirrelly
 * Windows 10 x64 & eta
 * Windows 10 x64 & handlebars
+
+# Libraries that can work with this but still have problems:
+* Twig (see [here](https://github.com/futurelucas4502/light-electron-renderer/issues/3) for more info)
