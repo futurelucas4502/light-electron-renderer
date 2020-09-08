@@ -8,13 +8,6 @@ The idea here is that you use this and parse the `require('some-templating-langu
 You wil be able to install it using:
 
 `npm i @futurelucas4502/light-electron-renderer`
-**HOWEVER** it has not yet been released and therefore follow these instructions:
-
-1. Clone or download the repo (and unzip)
-2. Change into the project you want to use this in
-3. Run `npm i "C:/path/to/downloaded/repo"`
-4. See the examples for how to
-5. Enjoy!
 
 Note: You **MUST** npm install whatever templating language your using
 
