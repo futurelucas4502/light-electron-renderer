@@ -55,25 +55,25 @@ function setupView() {
         callback(res)
         currentViewData = undefined
         currentOptions = undefined
-      }).catch((err) => {
+      }).catch(() => {
         retry = 2
         renderTemplate(fileName).then((res: any) => {
           callback(res)
           currentViewData = undefined
           currentOptions = undefined
-        }).catch((err) => {
+        }).catch(() => {
           retry = 3
           renderTemplate(fileName).then((res: any) => {
             callback(res)
             currentViewData = undefined
             currentOptions = undefined
-          }).catch((err) => {
+          }).catch(() => {
             retry = 4
             renderTemplate(fileName).then((res: any) => {
               callback(res)
               currentViewData = undefined
               currentOptions = undefined
-            }).catch((err) => {
+            }).catch(() => {
               retry = 5
               renderTemplate(fileName).then((res: any) => {
                 callback(res)
@@ -108,14 +108,18 @@ function renderTemplate(fileName: string) {
       const filePath = path.join(currentViewsFolderPath, `${fileName}${extension}`);
       const options = currentOptions || new Object()
       const viewData = currentViewData || new Object()
-      if (permanentOpts != undefined) {
-        for (var item in permanentOpts) {
-          options[item] = permanentOpts[item]
+      if (permanentOpts !== undefined) {
+        for (const item in permanentOpts) {
+          if (permanentOpts.hasOwnProperty(item)) {
+            options[item] = permanentOpts[item]
+          }
         }
       }
-      if (permanentVD != undefined) {
-        for (var item in permanentVD) {
-          viewData[item] = permanentVD[item]
+      if (permanentVD !== undefined) {
+        for (const item in permanentVD) {
+          if (permanentVD.hasOwnProperty(item)) {
+            viewData[item] = permanentVD[item]
+          }
         }
       }
       rendererAction(filePath, viewData, options, (renderedHTML: any) => {
@@ -141,7 +145,7 @@ function renderTemplate(fileName: string) {
 }
 
 function rendererAction(filePath: string, viewData: string, options: any, callback: (data: any) => void) {
-  if(debugMode){
+  if (debugMode) {
     console.log(retry)
   }
   switch (retry) {
@@ -172,7 +176,7 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
       callback(undefined)
       break
     case 2:
-      let html2 = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options)
+      const html2 = currentRenderer.currentRenderFunction(fs.readFileSync(process.cwd() + "\\" + filePath, 'utf8'), viewData, options)
       try { // TODO: Optimise this into its own case to prevent doing it every load
         html2.then((result: any) => {
           return result;
@@ -202,7 +206,7 @@ function rendererAction(filePath: string, viewData: string, options: any, callba
       callback(undefined)
       break
     case 4:
-      let html4 = currentRenderer.currentRenderFunction(filePath, viewData, options)
+      const html4 = currentRenderer.currentRenderFunction(filePath, viewData, options)
       try { // TODO: Optimise this into its own case to prevent doing it every load
         html4.then((result: any) => {
           return result
