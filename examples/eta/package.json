@@ -10,7 +10,7 @@
   "author": "futurelucas4502 (Lucas Wilson)",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^10.1.1"
+    "electron": "^10.1.2"
   },
   "dependencies": {
     "@futurelucas4502/light-electron-renderer": "file:../../",
