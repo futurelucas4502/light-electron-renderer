@@ -96,7 +96,7 @@ function setupAssets() {
   protocol.registerFileProtocol('asset', (request, callback) => {
     const hostName: any = url.parse(request.url).hostname;
     const fileName = parseFilePath(request.url);
-    const filePath = path.join(currentAssetFolderPath, hostName, fileName);
+    const filePath = path.join(process.cwd(), currentAssetFolderPath, hostName, fileName);
     callback({ path: filePath });
   });
 }
@@ -226,7 +226,7 @@ export function use(renderer: any, useAssets: boolean, assetFolderPath: string, 
   debugMode = debug
   try {
     currentRendererName = currentRenderer.name.toLowerCase();
-  } catch{
+  } catch {
     if (name) {
       currentRendererName = name.toLowerCase();
     } else {
