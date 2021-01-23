@@ -8,8 +8,8 @@ let currentRenderer: any;
 let currentRendererName: any;
 let currentViewData: any;
 let currentOptions: any;
-let previousViewData: any;
-let previousOptions: any;
+const previousViewData: any = {};
+const previousOptions: any = {};
 let currentViewsFolderPath: any;
 let currentAssetFolderPath: any;
 let retry: number = 0;
@@ -34,17 +34,20 @@ export function load(browserWindow: Electron.BrowserWindow, view: string, viewDa
       protocol: currentRendererName,
       slashes: true,
     }),
+    {
+      extraHeaders: 'clicked: true',
+    },
   );
 }
 
 function setupView() {
   protocol.registerBufferProtocol(currentRendererName, (request, callback) => {
-    if (request.headers.Accept === '*/*') {
-      // fixes an error that occurs when you open devtools
-      currentViewData = previousViewData;
-      currentOptions = previousOptions;
-    }
     const fileName = parseFilePath(request.url);
+    if (request.headers.Accept === '*/*' || !request.headers.hasOwnProperty('clicked')) {
+      // fixes an error that occurs when you open devtools as dev tools loads the page again using the accept header as */* and then we check if our own custom header exists if it does well we know we should use the current data and not any previously stored data e.g. when we refresh we won't have the data sent again and we won't have the clicked header meaning we need to use the existing data stored in the previous data array
+      currentViewData = previousViewData[fileName];
+      currentOptions = previousOptions[fileName];
+    }
     renderTemplate(fileName)
       .then((res: any) => {
         callback(res);
@@ -83,24 +86,17 @@ function setupView() {
                         currentViewData = undefined;
                         currentOptions = undefined;
                       })
-                      .catch(() => {
-                        retry = 5;
-                        renderTemplate(fileName)
-                          .then((res: any) => {
-                            callback(res);
-                            currentViewData = undefined;
-                            currentOptions = undefined;
-                          })
-                          .catch((err) => {
-                            throw new Error(err);
-                          });
+                      .catch((err) => {
+                        throw new Error(err);
                       });
                   });
               });
           });
       });
-    previousViewData = currentViewData;
-    previousOptions = currentOptions;
+    if (request.headers.Accept !== '*/*' || request.headers.hasOwnProperty('clicked')) {
+      previousViewData[fileName] = currentViewData;
+      previousOptions[fileName] = currentOptions;
+    }
   });
 }
 
