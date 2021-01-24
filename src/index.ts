@@ -2,6 +2,7 @@
 
 import { app, protocol } from 'electron';
 import fs = require('fs');
+import { parse } from 'path';
 import path = require('path');
 import url = require('url');
 let currentRenderer: any;
@@ -16,6 +17,8 @@ let retry: number = 0;
 let permanentOpts: any;
 let permanentVD: any;
 let debugMode: boolean = false;
+const vD = 'viewData';
+const vO = 'viewOptions';
 
 function parseFilePath(urlString: any) {
   const parsedUrl = new URL(urlString);
@@ -42,11 +45,22 @@ export function load(browserWindow: Electron.BrowserWindow, view: string, viewDa
 
 function setupView() {
   protocol.registerBufferProtocol(currentRendererName, (request, callback) => {
-    const fileName = parseFilePath(request.url);
+    let fileName: any;
+    if (request.url.includes('{')) {
+      fileName = parseFilePath(request.url.split('{')[0]);
+    } else {
+      fileName = parseFilePath(request.url);
+    }
     if (request.headers.Accept === '*/*' || !request.headers.hasOwnProperty('clicked')) {
       // fixes an error that occurs when you open devtools as dev tools loads the page again using the accept header as */* and then we check if our own custom header exists if it does well we know we should use the current data and not any previously stored data e.g. when we refresh we won't have the data sent again and we won't have the clicked header meaning we need to use the existing data stored in the previous data array
       currentViewData = previousViewData[fileName];
       currentOptions = previousOptions[fileName];
+    }
+    if (request.url.includes('{')) {
+      // i have to do another check here after setting the filePath due to the fact if i was to set the currentViewData it could be overwritten if new data was passed through which we obviously don't want
+      const data = JSON.parse(request.url.substring(request.url.indexOf('{')));
+      currentViewData = Object.assign(currentViewData ?? '', data[vD] ?? '');
+      currentOptions = Object.assign(currentOptions ?? '', data[vO] ?? '');
     }
     renderTemplate(fileName)
       .then((res: any) => {
