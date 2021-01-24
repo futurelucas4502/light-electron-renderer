@@ -2,10 +2,15 @@
 
 ## Contents
 
+* [Setup](#setup)
+* [API](#api)
+* [renderer.use()](#rendereruse)
+* [renderer.permOpts()](#rendererpermopts)
+* [renderer.permViewData()](#rendererpermviewdata)
+* [renderer.load()](#rendererload)
+* [Passing view data and options from the client side](#passingviewdataandoptionsfromtheclientside)
 
-
-
-## Set up
+## Setup
 
 `npm i @futurelucas4502/light-electron-renderer`
 
@@ -23,7 +28,9 @@ const renderer = require('@futurelucas4502/light-electron-renderer')
 
 ### renderer.use()
 
+```js
 renderer.use(renderer, useAssets, assetFolderPath, viewsFolderPath, renderFunction, name, debug)
+```
 
 * `renderer` Library: The variable name of the templating engine you've chosen to use
 * `useAssets` Bool: Whether or not to use Assets such as images, stylesheets, js etc etc
@@ -34,9 +41,11 @@ renderer.use(renderer, useAssets, assetFolderPath, viewsFolderPath, renderFuncti
 
 ### renderer.permOpts()
 
+```js
 renderer.permOpts({
   key: value  
 })
+```
 
 This is used to set permanent options for the renderer/templating language this is required for some languages to use the import or including or partials like with squirrelly
 
@@ -44,9 +53,11 @@ This is used to set permanent options for the renderer/templating language this 
 
 ### renderer.permViewData()
 
+```js
 renderer.permViewData({
     key: value
 })
+```
 
 This is used to set permanent view data for the renderer/templating language this may be something you want to do I have no idea?
 
@@ -54,14 +65,16 @@ This is used to set permanent view data for the renderer/templating language thi
 
 ### renderer.load()
 
+```js
 renderer.load(browserWindow, view, viewData, options)
+```
 
 * `browserWindow` Electron.BrowserWindow: The window you want the pages to be renderer on
 * `view` String: Name of the file you want to render without the file extension
 * `viewData` JSON: JSON data of all the view data you want to pass to that page
 * `options` JSON: JSON data of all the options you want to pass to that page
 
-### Passing through viewData from the client side
+### Passing view data and options from the client side
 
 To do this you would simply type in the link address like normal and add a JSON array on the end like so:
 
