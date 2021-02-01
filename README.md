@@ -16,6 +16,9 @@ Note: You **MUST** npm install whatever templating language your using
 # Docs
 [Documentation](https://futurelucas4502.github.io/docs/index.html?docs=light-electron-renderer)
 
+# Guide
+[Guide](https://futurelucas4502.medium.com/templating-in-electron-3302b9d7f6ac)
+
 # Confirmed working with:
 
 * Windows 10 x64 & ejs
