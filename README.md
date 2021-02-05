@@ -5,7 +5,7 @@ The goal of this project is to create a fully functional view renderer similair 
 
 The idea here is that you use this and parse the `require('some-templating-language')` into this as well as the name of the render function e.g. if it was ejs it would be `renderFile` hopefully that makes sense if not take a look at the examples in the examples folder
 
-You wil be able to install it using:
+You can install it using:
 
 `npm i @futurelucas4502/light-electron-renderer`
 
