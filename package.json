@@ -30,7 +30,13 @@
     "ejs",
     "pug",
     "jade",
-    "haml"
+    "haml",
+    "handlebars",
+    "squirrelly",
+    "eta",
+    "templating",
+    "view",
+    "rendering"
   ],
   "author": "futurelucas4502 (Lucas Wilson)",
   "license": "MIT",
