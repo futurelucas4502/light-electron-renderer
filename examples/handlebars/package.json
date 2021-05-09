@@ -15,6 +15,6 @@
   "dependencies": {
     "@futurelucas4502/light-electron-renderer": "file:../../",
     "engine-handlebars": "^1.1.0",
-    "handlebars": "^4.7.6"
+    "handlebars": "^4.7.7"
   }
 }
